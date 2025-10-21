@@ -22,11 +22,14 @@ running = True
 
 gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=9.81 / 10, step=0.0001, initial=G)
 drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, initial=DRAG)
+restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
 
 def update_position(position, velocity):
 
+    # get the values from sliders
     gravity = gravity_slider.getValue()
     drag = drag_slider.getValue()
+
     # Update velocity (add gravity)
     velocity.x += drag
     velocity.y += gravity
@@ -36,11 +39,15 @@ def update_position(position, velocity):
     return position
     
 def restitution(position, velocity):
+
+    # get value from slider
+    restitution = restitution_slider.value
+
     # Apply restitution (damping) when colliding with walls
     if (position.y > SCREEN_HEIGHT - 40) or (position.y < 40):
-        velocity.y *= RESTITUTION
+        velocity.y *= restitution
     if (position.x > SCREEN_WIDTH - 40) or (position.x < 40):
-        velocity.x *= RESTITUTION
+        velocity.x *= restitution
 
     # Enforce position constraints (keep ball within bounds)
     position.y = max(40, min(SCREEN_HEIGHT - 40, position.y))
