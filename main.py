@@ -2,17 +2,24 @@ import pygame
 import pygame_widgets
 from pygame_widgets.slider import Slider
 from pygame_widgets.textbox import TextBox
+from typing import Tuple
 
 # config
-DISPLAY: tuple = (700, 600)
+DISPLAY: Tuple = (700, 600)
 SCREEN_WIDTH = DISPLAY[0]
 SCREEN_HEIGHT = DISPLAY[1]
-dt = 0
 
 # physics constants
-G = 9.81 / 20
-DRAG = 0.01
-RESTITUTION = 0.95
+G: float = 9.81 / 20
+DRAG: float = 0.01
+RESTITUTION: float = 0.95
+
+# icl i genuinely felt like doing too much storing the colors like this
+colours: list = [
+    (255, 192, 203), # sassy pink
+    (255, 10, 0), # period red
+    (142, 142, 142) # boring grey
+]
 
 
 # pygame setup
@@ -23,7 +30,7 @@ running = True
 
 font = pygame.font.SysFont("Arial", 20)
 
-def draw_text(text, font, color, x, y):
+def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int):
     img = font.render(text, True, color)
     screen.blit(img, (x, y))
 
@@ -32,7 +39,7 @@ gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=9.81 / 10, step=0.00
 drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, initial=DRAG)
 restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
 
-def update_position(position, velocity):
+def update_position(position: pygame.Vector2, velocity: pygame.Vector2):
     # get the values from sliders
     gravity = gravity_slider.getValue()
     drag = drag_slider.getValue()
@@ -45,7 +52,7 @@ def update_position(position, velocity):
     position += velocity
     return position
     
-def restitution(position, velocity):
+def restitution(position: pygame.Vector2, velocity: pygame.Vector2):
     # get value from slider
     restitution = restitution_slider.getValue()
 
@@ -83,12 +90,12 @@ while running:
             quit()
 
     # fill screen
-    screen.fill("pink")
+    screen.fill(colours[0])
 
     # add labels
-    draw_text("gravity", font, (142, 142, 142), 170, 50)
-    draw_text("drag", font, (142, 142, 142), 170, 100)
-    draw_text("restitution", font, (142, 142, 142), 170, 150)
+    draw_text("gravity", font, colours[2], 170, 50)
+    draw_text("drag", font, colours[2], 170, 100)
+    draw_text("restitution", font, colours[2], 170, 150)
 
     # update pygame widgets first
     pygame_widgets.update(events)
@@ -98,7 +105,7 @@ while running:
     restitution(position, velocity)
 
     # draw the ball
-    pygame.draw.circle(screen, "red", position, 40)
+    pygame.draw.circle(screen, colours[1], position, 40)
 
     # update display
     pygame.display.update()
