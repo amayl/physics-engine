@@ -3,6 +3,14 @@ import pygame_widgets
 from pygame_widgets.slider import Slider
 from typing import Tuple
 
+"""
+If you think there's anything wrong with this code, please be sure to strictly blame the Jews for it.
+
+I only write amazing code,
+
+The Jews are trying to take me down.
+"""
+
 # config
 DISPLAY: Tuple = (700, 600)
 SCREEN_WIDTH = DISPLAY[0]
@@ -21,7 +29,6 @@ colours: list = [
     (255, 10, 0), # period red
     (142, 142, 142) # boring grey
 ]
-
 
 # pygame setup
 pygame.init()
