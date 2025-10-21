@@ -21,6 +21,12 @@ screen = pygame.display.set_mode(DISPLAY)
 clock = pygame.time.Clock()
 running = True
 
+font = pygame.font.SysFont("Arial", 20)
+
+def draw_text(text, font, color, x, y):
+    img = font.render(text, True, color)
+    screen.blit(img, (x, y))
+
 # sliders
 gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=9.81 / 10, step=0.0001, initial=G)
 drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, initial=DRAG)
@@ -78,6 +84,11 @@ while running:
 
     # fill screen
     screen.fill("pink")
+
+    # add labels
+    draw_text("gravity", font, (142, 142, 142), 170, 50)
+    draw_text("drag", font, (142, 142, 142), 170, 100)
+    draw_text("restitution", font, (142, 142, 142), 170, 150)
 
     # update pygame widgets first
     pygame_widgets.update(events)
