@@ -27,9 +27,9 @@ drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, i
 restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
 
 # labels
-gravity_label = TextBox(screen, 170, 50, 35, 35, fontSize=30)
-drag_label = TextBox(screen, 170, 100, 35, 35, fontSize=30)
-restitution_label = TextBox(screen, 170, 150, 35, 35, fontSize=30)
+gravity_label = TextBox(screen, 170, 50, 70, 35, fontSize=30)
+drag_label = TextBox(screen, 170, 100, 70, 35, fontSize=30)
+restitution_label = TextBox(screen, 170, 150, 70, 35, fontSize=30)
 
 # make the textboxes behave as labels
 gravity_label.disable()
@@ -38,7 +38,6 @@ restitution_label.disable()
 
 
 def update_position(position, velocity):
-
     # get the values from sliders
     gravity = gravity_slider.getValue()
     drag = drag_slider.getValue()
@@ -52,7 +51,6 @@ def update_position(position, velocity):
     return position
     
 def restitution(position, velocity):
-
     # get value from slider
     restitution = restitution_slider.getValue()
 
@@ -78,7 +76,7 @@ position = pygame.Vector2(x, y)
 vx, vy = 0, 0
 velocity = pygame.Vector2(vx, vy)
 
-
+# GAME LOOP
 
 while running:
     # poll for events
@@ -87,28 +85,27 @@ while running:
     for event in events:
         if event.type == pygame.QUIT:
             running = False
+            quit()
 
-    # fill the screen with a color to wipe away anything from last frame
+    # fill screen
     screen.fill("pink")
 
-    # kinda self explanatory icl
-    update_position(position, velocity)
-
-    # Draw the ball at its new position
-    pygame.draw.circle(screen, "red", position, 40)
-
-    # Apply resitution laws
-    restitution(position, velocity)
-
-    gravity_label.setText(str(gravity_slider.getValue()))
-    drag_label.setText(str(drag_slider.getValue()))
-    restitution_label.setText(str(restitution_slider.getValue()))
-    
-    # update pygame-widgets so sliders/buttons receive events and are drawn
+    # update pygame widgets first
     pygame_widgets.update(events)
 
-    # flip() the display to put your work on screen
-    pygame.display.flip()
+    # update label text after widgets are updated
+    gravity_label.setText(f"{gravity_slider.getValue():.4f}")
+    drag_label.setText(f"{drag_slider.getValue():.4f}")
+    restitution_label.setText(f"{restitution_slider.getValue():.4f}")
 
-    dt = clock.tick(60) / 1000
+    # physics update
+    position = update_position(position, velocity)
+    restitution(position, velocity)
+
+    # draw the ball
+    pygame.draw.circle(screen, "red", position, 40)
+
+    # update display
+    pygame.display.update()
+    clock.tick(60)
 pygame.quit()
