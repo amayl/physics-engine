@@ -14,6 +14,8 @@ DRAG: float = 0.01
 RESTITUTION: float = 0.95
 
 # icl i genuinely felt like doing too much storing the colors like this
+# not sorry
+
 colours: list = [
     (255, 192, 203), # sassy pink
     (255, 10, 0), # period red
@@ -26,10 +28,18 @@ pygame.init()
 screen = pygame.display.set_mode(DISPLAY)
 clock = pygame.time.Clock()
 running = True
-
 font = pygame.font.SysFont("Arial", 20)
 
-def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int):
+def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> None:
+    """
+    Render text to the screen\n
+    `text` -- A string that contains the text to be displayed\n
+    `font` -- A defined pygame font\n
+    `color` -- An RGB tuple storing the color\n
+    `x` -- the x coordinate of the top left\n
+    `y` -- the y coorindate of the top left\n
+    """
+
     img = font.render(text, True, color)
     screen.blit(img, (x, y))
 
@@ -39,6 +49,10 @@ drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, i
 restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2):
+    """
+    Takes the initial position & velocity vector as arguments and returns new position\n
+    Applies drag to the x-component & gravity to the y-component
+    """
     # get the values from sliders
     gravity = gravity_slider.getValue()
     drag = drag_slider.getValue()
@@ -52,6 +66,10 @@ def update_position(position: pygame.Vector2, velocity: pygame.Vector2):
     return position
     
 def restitution(position: pygame.Vector2, velocity: pygame.Vector2):
+    """
+    Applies Newton's Law of Restitution to balls\n
+    Handles boundary collisions
+    """
     # get value from slider
     restitution = restitution_slider.getValue()
 
