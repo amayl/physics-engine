@@ -26,17 +26,6 @@ gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=9.81 / 10, step=0.00
 drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, initial=DRAG)
 restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
 
-# labels
-gravity_label = TextBox(screen, 170, 50, 70, 35, fontSize=30)
-drag_label = TextBox(screen, 170, 100, 70, 35, fontSize=30)
-restitution_label = TextBox(screen, 170, 150, 70, 35, fontSize=30)
-
-# make the textboxes behave as labels
-gravity_label.disable()
-drag_label.disable()
-restitution_label.disable()
-
-
 def update_position(position, velocity):
     # get the values from sliders
     gravity = gravity_slider.getValue()
@@ -92,11 +81,6 @@ while running:
 
     # update pygame widgets first
     pygame_widgets.update(events)
-
-    # update label text after widgets are updated
-    gravity_label.setText(f"{gravity_slider.getValue():.4f}")
-    drag_label.setText(f"{drag_slider.getValue():.4f}")
-    restitution_label.setText(f"{restitution_slider.getValue():.4f}")
 
     # physics update
     position = update_position(position, velocity)
