@@ -23,7 +23,7 @@ dt = 0
 G: float = 9.81
 DRAG: float = 0.01
 RESTITUTION: float = 0.95
-WIND: float = 0.0
+WIND: float = 20.0
 
 # initial position and velocity
 x, y = SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
@@ -157,7 +157,7 @@ while running:
     draw_text(f"gravity: {gravity_slider.getValue():.2f}N", font, colours[2], 120, 10)
     draw_text(f"drag: {drag_slider.getValue():.2f}N", font, colours[2], 120, 40)
     draw_text(f"restitution: {restitution_slider.getValue():.2f}", font, colours[2], 120, 70)
-    draw_text(f"wind: {wind_slider.getValue():.2f}", font, colours[2], 120, 100)
+    draw_text(f"wind: {wind_slider.getValue()-20}N", font, colours[2], 120, 100)
 
     # draw the ball
     pygame.draw.circle(screen, colours[1], position, RADIUS)
