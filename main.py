@@ -25,6 +25,13 @@ DRAG: float = 0.01
 RESTITUTION: float = 0.95
 WIND: float = 0.0
 
+# initial position and velocity
+x, y = SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+position = pygame.Vector2(x, y)
+
+vx, vy = 0, 0
+velocity = pygame.Vector2(vx, vy)
+
 # icl i genuinely felt like doing too much storing the colors like this
 # not sorry
 
@@ -58,18 +65,21 @@ def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> Non
     img = font.render(text, True, color)
     screen.blit(img, (x, y))
 
-def reset_sliders():
+def reset():
+    global position, velocity
     gravity_slider.setValue(G)
     drag_slider.setValue(DRAG)
     restitution_slider.setValue(RESTITUTION)
     wind_slider.setValue(WIND)
+    position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    velocity = pygame.Vector2(0, 0)
 
 # sliders
 gravity_slider = Slider(screen, 10, 10, 100, 10, min=0, max=200, step=0.0001, initial=G)
 drag_slider = Slider(screen, 10, 40, 100, 10, min=0, max=1, step=0.00001, initial=DRAG)
 restitution_slider = Slider(screen, 10, 70, 100, 10, min=0, max=1, step=0.001, initial=RESTITUTION)
 wind_slider = Slider(screen, 10, 100, 100, 10, min=0, max=40, step=0.001, initial=WIND)
-reset_button = Button(screen, 720, 10, 70, 35, onClick=reset_sliders, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
+reset_button = Button(screen, 720, 10, 70, 35, onClick=reset, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
     """
@@ -120,12 +130,6 @@ def restitution(position: pygame.Vector2, velocity: pygame.Vector2):
         velocity.x = abs(velocity.x) * restitution
 
     return position, velocity
-
-x, y = SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-position = pygame.Vector2(x, y)
-
-vx, vy = 0, 0
-velocity = pygame.Vector2(vx, vy)
 
 # GAME LOOP
 
