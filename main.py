@@ -12,7 +12,7 @@ The Jews are trying to take me down.
 """
 
 # config
-DISPLAY: Tuple = (700, 600)
+DISPLAY: Tuple = (800, 600)
 SCREEN_WIDTH = DISPLAY[0]
 SCREEN_HEIGHT = DISPLAY[1]
 
@@ -117,9 +117,10 @@ while running:
     screen.fill(colours[0])
 
     # add labels
-    draw_text("gravity", font, colours[2], 170, 50)
-    draw_text("drag", font, colours[2], 170, 100)
-    draw_text("restitution", font, colours[2], 170, 150)
+    draw_text("gravity (default val 9.81N)", font, colours[2], 170, 50)
+    draw_text("drag (default val 0.01N)", font, colours[2], 170, 100)
+    draw_text("restitution (default val 0.95)", font, colours[2], 170, 150)
+    draw_text("gravity is scaled down by a factor of 20 by default*", font, colours[2], 10, 560)
 
     # update pygame widgets first
     pygame_widgets.update(events)
