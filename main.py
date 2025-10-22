@@ -13,13 +13,16 @@ The Jews are trying to take me down.
 
 # config
 DISPLAY: Tuple = (800, 600)
-SCREEN_WIDTH = DISPLAY[0]
-SCREEN_HEIGHT = DISPLAY[1]
+SCREEN_WIDTH: int = DISPLAY[0]
+SCREEN_HEIGHT: int = DISPLAY[1]
+RADIUS: int = 40
+dt = 0
 
 # physics constants
-G: float = 9.81 / 20
+G: float = 9.81
 DRAG: float = 0.01
 RESTITUTION: float = 0.95
+WIND: float = 0.0
 
 # icl i genuinely felt like doing too much storing the colors like this
 # not sorry
@@ -51,11 +54,12 @@ def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> Non
     screen.blit(img, (x, y))
 
 # sliders
-gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=9.81 / 10, step=0.0001, initial=G)
-drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 0.1, step=0.00001, initial=DRAG)
+gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=20, step=0.0001, initial=G)
+drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 1, step=0.00001, initial=DRAG)
 restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
+wind_slider = Slider(screen, 50, 200, 100, 20, min=-20, max=20, step=0.001, initial=WIND)
 
-def update_position(position: pygame.Vector2, velocity: pygame.Vector2):
+def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
     """
     Takes the initial position & velocity vector as arguments and returns new position\n
     Applies drag to the x-component & gravity to the y-component
@@ -63,14 +67,21 @@ def update_position(position: pygame.Vector2, velocity: pygame.Vector2):
     # get the values from sliders
     gravity = gravity_slider.getValue()
     drag = drag_slider.getValue()
+    wind = wind_slider.getValue()
 
     # Update velocity (add gravity)
-    velocity.x += drag
-    velocity.y += gravity
+    velocity.y += gravity * dt
+
+    # horizontal force
+    velocity.x += wind * dt
+
+    # Apply drag
+    velocity *= (1 - drag * dt)
 
     # Update position using velocity
-    position += velocity
-    return position
+    position += velocity * dt
+
+    return position, velocity
     
 def restitution(position: pygame.Vector2, velocity: pygame.Vector2):
     """
@@ -80,21 +91,23 @@ def restitution(position: pygame.Vector2, velocity: pygame.Vector2):
     # get value from slider
     restitution = restitution_slider.getValue()
 
-    # Apply restitution (damping) when colliding with walls
-    if (position.y > SCREEN_HEIGHT - 40) or (position.y < 40):
-        velocity.y *= restitution
-    if (position.x > SCREEN_WIDTH - 40) or (position.x < 40):
-        velocity.x *= restitution
+    # Bottom & top bounce
+    if position.y >= SCREEN_HEIGHT - RADIUS:
+        position.y = SCREEN_HEIGHT - RADIUS
+        velocity.y = -abs(velocity.y) * restitution
+    elif position.y <= RADIUS:
+        position.y = RADIUS
+        velocity.y = abs(velocity.y) * restitution
 
-    # Enforce position constraints (keep ball within bounds)
-    position.y = max(40, min(SCREEN_HEIGHT - 40, position.y))
-    position.x = max(40, min(SCREEN_WIDTH - 40, position.x))
+    # Right & left bounce
+    if position.x >= SCREEN_WIDTH - RADIUS:
+        position.x = SCREEN_WIDTH - RADIUS
+        velocity.x = -abs(velocity.x) * restitution
+    elif position.x <= RADIUS:
+        position.x = RADIUS
+        velocity.x = abs(velocity.x) * restitution
 
-    # Reverse velocity when hitting boundaries
-    if (position.y >= SCREEN_HEIGHT - 40) or (position.y <= 40):
-        velocity.y = -velocity.y
-    if (position.x >= SCREEN_WIDTH - 40) or (position.x <= 40):
-        velocity.x = -velocity.x
+    return position, velocity
 
 x, y = SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
 position = pygame.Vector2(x, y)
@@ -105,6 +118,8 @@ velocity = pygame.Vector2(vx, vy)
 # GAME LOOP
 
 while running:
+    dt = clock.tick(60) / 1000
+
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     events = pygame.event.get()
@@ -120,19 +135,19 @@ while running:
     draw_text("gravity (default val 9.81N)", font, colours[2], 170, 50)
     draw_text("drag (default val 0.01N)", font, colours[2], 170, 100)
     draw_text("restitution (default val 0.95)", font, colours[2], 170, 150)
-    draw_text("gravity is scaled down by a factor of 20 by default*", font, colours[2], 10, 560)
+    draw_text("wind (negative = left, positive = right)", font, colours[2], 170, 200)
 
     # update pygame widgets first
     pygame_widgets.update(events)
 
     # physics update
-    position = update_position(position, velocity)
-    restitution(position, velocity)
+    position, velocity = update_position(position, velocity, dt)
+    position, velocity = restitution(position, velocity)
 
     # draw the ball
-    pygame.draw.circle(screen, colours[1], position, 40)
+    pygame.draw.circle(screen, colours[1], position, RADIUS)
 
     # update display
     pygame.display.update()
-    clock.tick(60)
+
 pygame.quit()
