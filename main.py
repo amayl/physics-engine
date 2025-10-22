@@ -82,6 +82,9 @@ gravity_slider = Slider(screen, 10, 10, 100, 10, min=0, max=200, step=0.0001, in
 drag_slider = Slider(screen, 10, 40, 100, 10, min=0, max=1, step=0.00001, initial=DRAG)
 restitution_slider = Slider(screen, 10, 70, 100, 10, min=0, max=1, step=0.001, initial=RESTITUTION)
 wind_slider = Slider(screen, 10, 100, 100, 10, min=0, max=40, step=0.001, initial=WIND)
+speed_slider = Slider(screen, 10, 130, 100, 10, min=1, max=2000, step=10, initial=1000)
+
+
 reset_button = Button(screen, 720, 10, 70, 35, onClick=reset, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
@@ -137,7 +140,8 @@ def restitution(position: pygame.Vector2, velocity: pygame.Vector2):
 # GAME LOOP
 
 while running:
-    dt = clock.tick(60) / 1000
+    t = speed_slider.getValue()
+    dt = clock.tick(60) / t
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -161,6 +165,7 @@ while running:
     draw_text(f"drag: {drag_slider.getValue():.2f}N", font, colours[2], 120, 40)
     draw_text(f"restitution: {restitution_slider.getValue():.2f}", font, colours[2], 120, 70)
     draw_text(f"wind: {wind_slider.getValue()-20}N", font, colours[2], 120, 100)
+    draw_text("dt", font, colours[2], 120, 130)
 
     # draw the ball
     pygame.draw.circle(screen, colours[1], position, RADIUS)
