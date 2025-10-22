@@ -17,7 +17,7 @@ DISPLAY: Tuple = (800, 600)
 SCREEN_WIDTH: int = DISPLAY[0]
 SCREEN_HEIGHT: int = DISPLAY[1]
 RADIUS: int = 40
-dt = 0
+dt = 0  
 
 # physics constants
 G: float = 9.81
@@ -51,6 +51,9 @@ screen = pygame.display.set_mode(DISPLAY)
 clock = pygame.time.Clock()
 running = True
 font = pygame.font.SysFont("Arial", 20)
+
+dr_house = pygame.image.load("house_sprite.jpg").convert_alpha()  # Use convert_alpha() if PNG has transparency
+dr_house = pygame.transform.scale(dr_house, (RADIUS*2, RADIUS*2))
 
 def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> None:
     """
@@ -161,6 +164,9 @@ while running:
 
     # draw the ball
     pygame.draw.circle(screen, colours[1], position, RADIUS)
+    # draw the ball image
+    screen.blit(dr_house, (position.x - RADIUS, position.y - RADIUS))
+
 
     # update display
     pygame.display.update()
