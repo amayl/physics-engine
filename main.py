@@ -1,6 +1,7 @@
 import pygame
 import pygame_widgets
 from pygame_widgets.slider import Slider
+from pygame_widgets.button import Button
 from typing import Tuple
 
 """
@@ -28,9 +29,13 @@ WIND: float = 0.0
 # not sorry
 
 colours: list = [
-    (255, 192, 203), # sassy pink
-    (255, 10, 0), # period red
-    (142, 142, 142) # boring grey
+    (255, 192, 203), # sassy pink                                               0
+    (255, 10, 0), # period red                                                  1
+    (142, 142, 142), # boring grey                                              2
+    (180, 180, 180), # regular degular button                                   3
+    (150, 150, 150), # are you gonna fucking press the button or not (hover)    4
+    (110, 110, 110), # damn they pressed the button                             5
+
 ]
 
 # pygame setup
@@ -53,11 +58,18 @@ def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> Non
     img = font.render(text, True, color)
     screen.blit(img, (x, y))
 
+def reset_sliders():
+    gravity_slider.setValue(G)
+    drag_slider.setValue(DRAG)
+    restitution_slider.setValue(RESTITUTION)
+    wind_slider.setValue(WIND)
+
 # sliders
 gravity_slider = Slider(screen, 10, 10, 100, 10, min=0, max=200, step=0.0001, initial=G)
 drag_slider = Slider(screen, 10, 40, 100, 10, min=0, max=1, step=0.00001, initial=DRAG)
 restitution_slider = Slider(screen, 10, 70, 100, 10, min=0, max=1, step=0.001, initial=RESTITUTION)
 wind_slider = Slider(screen, 10, 100, 100, 10, min=0, max=40, step=0.001, initial=WIND)
+reset_button = Button(screen, 720, 10, 70, 35, onClick=reset_sliders, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
     """
@@ -150,3 +162,5 @@ while running:
     pygame.display.update()
 
 pygame.quit()
+
+
