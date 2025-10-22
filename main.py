@@ -54,10 +54,10 @@ def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> Non
     screen.blit(img, (x, y))
 
 # sliders
-gravity_slider = Slider(screen, 50, 50, 100, 20, min=0, max=20, step=0.0001, initial=G)
-drag_slider = Slider(screen, 50, 100, 100, 20, min=0, max = 1, step=0.00001, initial=DRAG)
-restitution_slider = Slider(screen, 50, 150, 100, 20, min=0, max = 1, step=0.001, initial=RESTITUTION)
-wind_slider = Slider(screen, 50, 200, 100, 20, min=-20, max=20, step=0.001, initial=WIND)
+gravity_slider = Slider(screen, 10, 10, 100, 10, min=0, max=20, step=0.0001, initial=G)
+drag_slider = Slider(screen, 10, 40, 100, 10, min=0, max=1, step=0.00001, initial=DRAG)
+restitution_slider = Slider(screen, 10, 70, 100, 10, min=0, max=1, step=0.001, initial=RESTITUTION)
+wind_slider = Slider(screen, 10, 100, 100, 10, min=0, max=40, step=0.001, initial=WIND)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
     """
@@ -67,7 +67,7 @@ def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: floa
     # get the values from sliders
     gravity = gravity_slider.getValue()
     drag = drag_slider.getValue()
-    wind = wind_slider.getValue()
+    wind = wind_slider.getValue() - 20
 
     # Update velocity (add gravity)
     velocity.y += gravity * dt
@@ -131,18 +131,17 @@ while running:
     # fill screen
     screen.fill(colours[0])
 
-    # add labels
-    draw_text("gravity (default val 9.81N)", font, colours[2], 170, 50)
-    draw_text("drag (default val 0.01N)", font, colours[2], 170, 100)
-    draw_text("restitution (default val 0.95)", font, colours[2], 170, 150)
-    draw_text("wind (negative = left, positive = right)", font, colours[2], 170, 200)
-
     # update pygame widgets first
     pygame_widgets.update(events)
 
     # physics update
     position, velocity = update_position(position, velocity, dt)
     position, velocity = restitution(position, velocity)
+
+    draw_text("gravity", font, colours[2], 120, 10)
+    draw_text("drag", font, colours[2], 120, 40)
+    draw_text("restitution", font, colours[2], 120, 70)
+    draw_text("wind", font, colours[2], 120, 100)
 
     # draw the ball
     pygame.draw.circle(screen, colours[1], position, RADIUS)
