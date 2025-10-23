@@ -5,11 +5,9 @@ from pygame_widgets.button import Button
 from typing import Tuple
 
 """
-If you think there's anything wrong with this code, please be sure to strictly blame the Jews for it.
-
-I only write amazing code,
-
-The Jews are trying to take me down.
+> icl sometimes i miss calling her mommy
+> and then she'd lowkey call me a good boy back
+> good times
 """
 
 # config
@@ -34,7 +32,6 @@ velocity = pygame.Vector2(vx, vy)
 
 # icl i genuinely felt like doing too much storing the colors like this
 # not sorry
-
 colours: list = [
     (255, 192, 203), # sassy pink                                               0
     (255, 10, 0), # period red                                                  1
@@ -42,7 +39,6 @@ colours: list = [
     (180, 180, 180), # regular degular button                                   3
     (150, 150, 150), # are you gonna fucking press the button or not (hover)    4
     (110, 110, 110), # damn they pressed the button                             5
-
 ]
 
 # pygame setup
@@ -68,14 +64,28 @@ def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> Non
     img = font.render(text, True, color)
     screen.blit(img, (x, y))
 
-def reset():
+def reset_all() -> None:
     global position, velocity
+
     gravity_slider.setValue(G)
     drag_slider.setValue(DRAG)
     restitution_slider.setValue(RESTITUTION)
     wind_slider.setValue(WIND)
+
     position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     velocity = pygame.Vector2(0, 0)
+
+def reset_gravity() -> None:
+    gravity_slider.setValue(G)
+
+def reset_drag() -> None:
+    drag_slider.setValue(DRAG)
+
+def reset_wind() -> None:
+    wind_slider.setValue(WIND)
+
+def reset_restitution() -> None:
+    restitution_slider.setValue(RESTITUTION)
 
 # sliders
 gravity_slider = Slider(screen, 10, 10, 100, 10, min=0, max=200, step=0.0001, initial=G)
@@ -84,8 +94,12 @@ restitution_slider = Slider(screen, 10, 70, 100, 10, min=0, max=1, step=0.001, i
 wind_slider = Slider(screen, 10, 100, 100, 10, min=0, max=40, step=0.001, initial=WIND)
 speed_slider = Slider(screen, 10, 130, 100, 10, min=1, max=2000, step=10, initial=1000)
 
-
-reset_button = Button(screen, 720, 10, 70, 35, onClick=reset, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
+# buttons
+reset_all_button = Button(screen, 720, 10, 70, 35, onClick=reset_all, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
+reset_gravity_btn = Button(screen, 130, 10, 25, 25, onClick=reset_gravity, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
+reset_drag_btn = Button(screen, 130, 40, 25, 25, onClick=reset_drag, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
+reset_wind_btn = Button(screen, 130, 70,25, 25, onClick=reset_restitution, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
+reset_restitution_btn = Button(screen, 130, 100,25, 25, onClick=reset_wind, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
     """
@@ -161,11 +175,11 @@ while running:
     position, velocity = update_position(position, velocity, dt)
     position, velocity = restitution(position, velocity)
 
-    draw_text(f"gravity: {gravity_slider.getValue():.2f}N", font, colours[2], 120, 10)
-    draw_text(f"drag: {drag_slider.getValue():.2f}N", font, colours[2], 120, 40)
-    draw_text(f"restitution: {restitution_slider.getValue():.2f}", font, colours[2], 120, 70)
-    draw_text(f"wind: {wind_slider.getValue()-20}N", font, colours[2], 120, 100)
-    draw_text("dt", font, colours[2], 120, 130)
+    draw_text(f"gravity: {gravity_slider.getValue():.2f}N", font, colours[2], 170, 10)
+    draw_text(f"drag: {drag_slider.getValue():.2f}N", font, colours[2], 170, 40)
+    draw_text(f"restitution: {restitution_slider.getValue():.2f}", font, colours[2], 170, 70)
+    draw_text(f"wind: {wind_slider.getValue()-20}N", font, colours[2], 170, 100)
+    draw_text("dt", font, colours[2], 170, 130)
 
     # draw the ball
     pygame.draw.circle(screen, colours[1], position, RADIUS)
