@@ -48,9 +48,6 @@ clock = pygame.time.Clock()
 running = True
 font = pygame.font.SysFont("Arial", 20)
 
-dr_house = pygame.image.load("house_sprite.jpg").convert_alpha()  # Use convert_alpha() if PNG has transparency
-dr_house = pygame.transform.scale(dr_house, (RADIUS*2, RADIUS*2))
-
 def draw_text(text: str, font: pygame.font, color: Tuple, x: int, y: int) -> None:
     """
     Render text to the screen\n
@@ -87,19 +84,90 @@ def reset_wind() -> None:
 def reset_restitution() -> None:
     restitution_slider.setValue(RESTITUTION)
 
+
+# lets allow the people to choose between peppa pig or dr house
+images = ["house_sprite.jpg", "peppa_pig.jpg"]
+
+def set_image(filename: str) -> None:
+    global image
+    image = pygame.image.load(filename).convert_alpha()
+    image = pygame.transform.scale(image, (RADIUS*2, RADIUS*2))
+
+# initialize default image
+set_image(images[0])
+
+# lets user choose peppa pig mogging sprite
+choose_peppa = Button(
+    screen, 720, 50, 70, 35,
+    onClick=lambda: set_image(images[1]),
+    inactiveColour=colours[3], hoverColour=colours[4],
+    pressedColour=colours[5], text="peppa pig", radius=10, fontSize=15
+)
+
+# lets user choose dr house as a house sprite
+choose_house = Button(
+    screen, 720, 90, 70, 35,
+    onClick=lambda: set_image(images[0]),
+    inactiveColour=colours[3], hoverColour=colours[4],
+    pressedColour=colours[5], text="dr house", radius=10, fontSize=15
+)
+
 # sliders
-gravity_slider = Slider(screen, 10, 10, 100, 10, min=0, max=200, step=0.0001, initial=G)
-drag_slider = Slider(screen, 10, 40, 100, 10, min=0, max=1, step=0.00001, initial=DRAG)
-restitution_slider = Slider(screen, 10, 70, 100, 10, min=0, max=1, step=0.001, initial=RESTITUTION)
-wind_slider = Slider(screen, 10, 100, 100, 10, min=0, max=40, step=0.001, initial=WIND)
-speed_slider = Slider(screen, 10, 130, 100, 10, min=1, max=2000, step=10, initial=1000)
+gravity_slider = Slider(
+    screen, 10, 10, 100, 10,
+    min=0, max=200,
+    step=0.0001, initial=G)
+
+drag_slider = Slider(
+    screen, 10, 40, 100, 10,
+    min=0, max=1,
+    step=0.00001, initial=DRAG)
+
+restitution_slider = Slider(
+    screen, 10, 70, 100, 10,
+    min=0, max=1,
+    step=0.001, initial=RESTITUTION)
+
+wind_slider = Slider(
+    screen, 10, 100, 100, 10,
+    min=0, max=40,
+    step=0.001, initial=WIND)
+
+speed_slider = Slider(
+    screen, 10, 130, 100, 10,
+    min=1, max=2000,
+    step=10, initial=1000)
 
 # buttons
-reset_all_button = Button(screen, 720, 10, 70, 35, onClick=reset_all, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="Reset", radius=10)
-reset_gravity_btn = Button(screen, 130, 10, 25, 25, onClick=reset_gravity, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
-reset_drag_btn = Button(screen, 130, 40, 25, 25, onClick=reset_drag, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
-reset_wind_btn = Button(screen, 130, 70,25, 25, onClick=reset_restitution, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
-reset_restitution_btn = Button(screen, 130, 100,25, 25, onClick=reset_wind, inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5], text="R", radius=10)
+reset_all_button = Button(
+    screen, 720, 10, 70, 35,
+    onClick=reset_all,
+    inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5],
+    text="Reset", radius=10)
+
+reset_gravity_btn = Button(
+    screen, 130, 10, 25, 25,
+    onClick=reset_gravity,
+    inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5],
+    text="R", radius=10)
+
+reset_drag_btn = Button(
+    screen, 130, 40, 25, 25,
+    onClick=reset_drag,
+    inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5],
+    text="R", radius=10)
+
+reset_wind_btn = Button(
+    screen, 130, 70,25, 25,
+    onClick=reset_restitution,
+    inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5],
+    text="R", radius=10)
+
+reset_restitution_btn = Button(
+    screen, 130, 100,25, 25,
+    onClick=reset_wind, 
+    inactiveColour=colours[3], hoverColour=colours[4], pressedColour=colours[5],
+    text="R", radius=10)
 
 def update_position(position: pygame.Vector2, velocity: pygame.Vector2, dt: float):
     """
@@ -184,7 +252,7 @@ while running:
     # draw the ball
     pygame.draw.circle(screen, colours[1], position, RADIUS)
     # draw the ball image
-    screen.blit(dr_house, (position.x - RADIUS, position.y - RADIUS))
+    screen.blit(image, (position.x - RADIUS, position.y - RADIUS))
 
 
     # update display
