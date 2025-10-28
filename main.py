@@ -4,11 +4,6 @@ from pygame_widgets.slider import Slider
 from pygame_widgets.button import Button
 from typing import Tuple
 
-"""
-> icl sometimes i miss calling her mommy
-> and then she'd lowkey call me a good boy back
-> good times
-"""
 
 # config
 DISPLAY: Tuple = (800, 600)
@@ -32,7 +27,7 @@ velocity = pygame.Vector2(vx, vy)
 
 # icl i genuinely felt like doing too much storing the colors like this
 # not sorry
-colours: list = [
+colours: list[Tuple] = [
     (255, 192, 203), # sassy pink                                               0
     (255, 10, 0), # period red                                                  1
     (142, 142, 142), # boring grey                                              2
@@ -86,7 +81,7 @@ def reset_restitution() -> None:
 
 
 # lets allow the people to choose between peppa pig or dr house
-images = ["house_sprite.jpg", "peppa_pig.jpg"]
+images = ["house_sprite.jpg", "peppa_pig.jpg", "lebron.JPG"]
 
 def set_image(filename: str) -> None:
     global image
@@ -110,6 +105,13 @@ choose_house = Button(
     onClick=lambda: set_image(images[0]),
     inactiveColour=colours[3], hoverColour=colours[4],
     pressedColour=colours[5], text="dr house", radius=10, fontSize=15
+)
+
+choose_lebron = Button(
+    screen, 720, 130, 70, 35,
+    onClick=lambda: set_image(images[2]),
+    inactiveColour=colours[3], hoverColour=colours[4],
+    pressedColour=colours[5], text="lebron", radius=10, fontSize=15
 )
 
 # sliders
@@ -259,5 +261,4 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-
 
